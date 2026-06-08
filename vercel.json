@@ -1,0 +1,7 @@
+{
+  "builds": [{ "src": "app.py", "use": "@vercel/python" }],
+  "routes": [
+    { "src": "/@Kasa.7z/free/public/api/search", "dest": "/app.py" },
+    { "src": "/(.*)", "dest": "/app.py" }
+  ]
+}
