@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 import requests
 import json
+from urllib.parse import unquote
 
 app = Flask(__name__)
 
@@ -12,9 +13,14 @@ def search():
     if not phone:
         return jsonify({"error": "Missing 'phone' param"}), 400
     
-    resp = requests.get(f"{ORIGINAL_URL}={phone}", timeout=15)
+    clean_phone = unquote(phone).strip()
+    if not clean_phone.startswith('+'):
+        clean_phone = '+' + clean_phone.lstrip('+')
+    
+    resp = requests.get(f"{ORIGINAL_URL}={clean_phone}", timeout=15)
     original_data = resp.json()
     original_data["developer"] = "@FALCON_HU"
+    original_data["query"] = clean_phone
     
     return jsonify(original_data)
 
